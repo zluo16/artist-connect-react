@@ -10,6 +10,11 @@ export default class Nav extends Component {
 
   activeItem = (checkURL) => this.context.router.history.location.pathname === checkURL
 
+  handleLogout() {
+    localStorage.clear()
+    this.context.router.history.push('/login')
+  }
+
   render() {
     return (
       <Menu pointing vertical>
@@ -31,7 +36,10 @@ export default class Nav extends Component {
           <Menu.Item></Menu.Item>
         </Menu.Menu>
 
-        <Menu.Item></Menu.Item>
+        <Menu.Menu>
+          <Menu.Item
+            as={Link} to='/login' name='logout' onClick={this.handleLogout}>Logout</Menu.Item>
+        </Menu.Menu>
       </Menu>
     )
   }
