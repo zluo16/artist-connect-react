@@ -17,7 +17,7 @@ export default class Nav extends Component {
 
   render() {
     return (
-      <Menu pointing vertical>
+      <Menu pointing vertical compact size='massive'>
         <Menu.Menu>
           <Menu.Item
             as={Link} to='/home' name='home' active={this.activeItem('/home')}
@@ -30,15 +30,16 @@ export default class Nav extends Component {
             Search For Connections
           </Menu.Item>
           <Menu.Item
-            as={Link} to='/jobs' name='job_postings' active={this.activeItem('/job_postings')} onClick={this.handleItemClick}>
+            as={Link} to='/jobs' name='job_postings' active={this.activeItem('/jobs')} onClick={this.handleItemClick}>
             Search Jobs
           </Menu.Item>
           <Menu.Item></Menu.Item>
         </Menu.Menu>
-
         <Menu.Menu>
           <Menu.Item
-            as={Link} to='/login' name='logout' onClick={this.handleLogout}>Logout</Menu.Item>
+            as={Link} to='/login' name='logout' onClick={this.handleLogout}>
+            Logout
+          </Menu.Item>
         </Menu.Menu>
       </Menu>
     )
