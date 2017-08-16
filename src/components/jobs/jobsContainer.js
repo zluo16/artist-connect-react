@@ -1,26 +1,49 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Input, Grid, Form } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 import JobsList from './jobsList'
 import Nav from '../nav'
 
-const JobsContainer = (props) => {
-  return (
-    <div>
-      <Form onSubmit={props.handleJobSearchSubmit}>
-        <Form.Input onChange={props.handleChange}
-          icon='search'
-          placeholder='Search...' onSubmit={props.handleJobSearchSubmit}
-        />
-        <Form.Button content='Go' />
-      </Form>
+class JobsContainer extends Component {
+  static contextTypes = {
+    router: PropTypes.object
+  }
 
-      <Grid>
-        <Grid.Column>
-          <JobsList jobs={props.jobPostings} />
-        </Grid.Column>
-      </Grid>
-    </div>
-  )
+  state = {
+    orgs: []
+  }
+
+  componentWillMount() {
+    fetch('http://localhost:3000/api/v1/organizations', {
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'Authorization': localStorage.getItem('jwt')
+      }
+    })
+    .then(res => res.json())
+    .then(orgs => this.setState({ orgs }))
+  }
+
+  render() {
+    return (
+      <div>
+        <Form onSubmit={this.props.handleJobSearchSubmit}>
+          <Form.Input onChange={this.props.handleChange}
+            icon='search'
+            placeholder='Search...' onSubmit={this.props.handleJobSearchSubmit}
+          />
+          <Form.Button content='Go' />
+        </Form>
+
+        <Grid>
+          <Grid.Column>
+            <JobsList jobs={this.props.jobPostings} orgs={this.state.orgs} />
+          </Grid.Column>
+        </Grid>
+      </div>
+    )
+  }
 }
 
 export default JobsContainer

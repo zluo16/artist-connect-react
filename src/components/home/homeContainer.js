@@ -21,7 +21,7 @@ export default class HomeContainer extends Component {
       { menuItem: 'Job Postings', render: () => <Tab.Pane><JobsFeed /></Tab.Pane> },
       { menuItem: 'Posts', render: () => <Tab.Pane></Tab.Pane> }
     ]
-    
+
     return (
       <div>
         <PostBox user={this.state.currentUser} />
