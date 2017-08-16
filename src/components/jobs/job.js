@@ -82,6 +82,7 @@ export default class Job extends Component {
     return (
       <div>
         <JobHeader job={job} show={this.show} />
+        <br></br>
         <Container text>
           <Header as='h2'>{titleHeader}</Header>
           <p>{job.description}</p>
