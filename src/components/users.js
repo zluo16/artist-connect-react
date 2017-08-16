@@ -6,7 +6,6 @@ import UsersList from './usersList'
 const Users = (props) => {
   return (
     <div>
-      <Nav />
       <Form onSubmit={props.handleSearchSubmit}>
         <Form.Input onChange={props.handleChange}
           icon='search'

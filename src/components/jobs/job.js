@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Button, Form } from 'semantic-ui-react'
+import { Modal, Button, Form, Container, Header } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import JobHeader from './jobHeader'
 import ApplicationForm from './applicationForm'
@@ -11,6 +11,7 @@ export default class Job extends Component {
 
   state = {
     job: {},
+    org: {},
     open: false,
     resume: '',
     cover_letter: ''
@@ -34,11 +35,26 @@ export default class Job extends Component {
     .then(res => res.json())
     .then(job => {
       this.setState({ job })
+      this.fetchOrg(this.state.job.organization.id)
     })
   }
 
   handleTextChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
+  }
+
+  fetchOrg(id) {
+    const orgUrl = `http://localhost:3000/api/v1/organizations/${id}`
+
+    fetch(orgUrl, {
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'Authorization': localStorage.getItem('jwt')
+      }
+    })
+    .then(res => res.json())
+    .then(org => this.setState({ org }))
   }
 
   handleJobApplication = (jobId) => {
@@ -60,11 +76,18 @@ export default class Job extends Component {
   }
 
   render() {
-    const { open, job } = this.state
+    const { open, job, org } = this.state
+    const titleHeader = `${this.state.job.title} for ${org.name}`
 
     return (
       <div>
         <JobHeader job={job} show={this.show} />
+        <Container text>
+          <Header as='h2'>{titleHeader}</Header>
+          <p>{job.description}</p>
+          <p>{job.responsibilities}</p>
+          <p>{job.qualifications}</p>
+        </Container>
 
         <Modal size='small' open={open} onClose={this.close}>
           <Modal.Header>

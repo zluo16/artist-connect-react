@@ -6,7 +6,7 @@ const JobHeader = (props) => {
   return (
     <div>
       <Header as='h2' icon textAlign='center'>
-        <Icon name='users' circular />
+        <Icon name='money' circular />
         <Header.Content>
           {title}
         </Header.Content>

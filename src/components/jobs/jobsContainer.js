@@ -6,7 +6,6 @@ import Nav from '../nav'
 const JobsContainer = (props) => {
   return (
     <div>
-      <Nav />
       <Form onSubmit={props.handleJobSearchSubmit}>
         <Form.Input onChange={props.handleChange}
           icon='search'
