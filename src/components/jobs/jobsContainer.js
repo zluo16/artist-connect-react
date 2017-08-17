@@ -35,10 +35,11 @@ class JobsContainer extends Component {
           />
           <Form.Button content='Go' />
         </Form>
+        <br></br>
 
         <Grid>
           <Grid.Column>
-            <JobsList jobs={this.props.jobPostings} orgs={this.state.orgs} />
+            <JobsList jobs={this.props.jobPostings} />
           </Grid.Column>
         </Grid>
       </div>

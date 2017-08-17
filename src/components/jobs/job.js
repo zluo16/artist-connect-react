@@ -14,7 +14,8 @@ export default class Job extends Component {
     org: {},
     open: false,
     resume: '',
-    cover_letter: ''
+    cover_letter: '',
+    hasApplied: false
   }
 
   show = () => this.setState({ open: true })
@@ -34,7 +35,7 @@ export default class Job extends Component {
     })
     .then(res => res.json())
     .then(job => {
-      this.setState({ job })
+      this.setState({ job, hasApplied: this.checkApplied(job) })
       this.fetchOrg(this.state.job.organization.id)
     })
   }
@@ -57,6 +58,10 @@ export default class Job extends Component {
     .then(org => this.setState({ org }))
   }
 
+  checkApplied(job) {
+    return !!job.users.find(user => user.id == this.props.currentUser.id)
+  }
+
   handleJobApplication = (jobId) => {
     fetch('http://localhost:3000/api/v1/applications', {
       method: 'POST',
@@ -73,6 +78,13 @@ export default class Job extends Component {
     .then(res => res.json())
     .then(res => console.log(res))
     this.close()
+    this.setState({
+      job: {
+        ...this.state.job,
+        ap_number: this.state.job.ap_number += 1
+      }
+    })
+    this.setState({ ...this.state.job, hasApplied: true })
   }
 
   render() {
@@ -81,7 +93,12 @@ export default class Job extends Component {
 
     return (
       <div>
-        <JobHeader job={job} show={this.show} />
+        <JobHeader
+          job={job}
+          show={this.show}
+          currentUser={this.props.currentUser}
+          hasApplied={this.state.hasApplied}
+        />
         <br></br>
         <Container text>
           <Header as='h2'>{titleHeader}</Header>

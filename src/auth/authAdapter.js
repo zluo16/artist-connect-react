@@ -13,6 +13,7 @@ export default class AuthAdapter {
     return fetch(`${baseUrl}/me`, {
       headers: headers()
     }).then(res => res.json())
+    .then(res => res)
   }
 }
 

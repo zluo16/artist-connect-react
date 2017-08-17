@@ -14,6 +14,7 @@ import UserProfileContainer from './components/UserProfileContainer'
 import JobsContainer from './components/jobs/jobsContainer'
 import Job from './components/jobs/job'
 import JobPostingForm from './components/jobs/jobPostingForm'
+import FriendsContainer from './components/home/friendsContainer'
 import './App.css';
 import 'semantic-ui-css/semantic.min.css';
 import { Button,
@@ -37,6 +38,7 @@ class App extends Component {
     auth: {
       headers: AuthAdapter.headers
     },
+    currentUser: {},
     users: [],
     jobPostings: [],
     organizations: [],
@@ -55,6 +57,11 @@ class App extends Component {
           this.context.router.history.push('/home')
         }
       })
+  }
+
+  handleLogout = () => {
+    localStorage.clear()
+    this.context.router.history.push('/login')
   }
 
   componentWillMount() {
@@ -93,6 +100,16 @@ class App extends Component {
     .then(res => {
       this.setState({ organizations: res })
     })
+
+    fetch('http://localhost:3000/api/v1/me', {
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'Authorization': localStorage.getItem('jwt')
+      }
+    })
+    .then(res => res.json())
+    .then(currentUser => this.setState({ currentUser }))
   }
 
   handleChange = (event) => {
@@ -138,17 +155,21 @@ class App extends Component {
           <Menu.Item
             as={Link}
             to='/users'><Icon name="add user" />Users</Menu.Item>
-          <Menu.Item><Icon name="smile" />Friends</Menu.Item>
+          <Menu.Item
+            as={Link}
+            to='/friends'><Icon name="smile" />Friends</Menu.Item>
           <Menu.Item
             as={Link}
             to='/jobs'><Icon name="money" />Find Job</Menu.Item>
+          <Menu.Item
+            onClick={this.handleLogout}><Icon name="lock" />Logout</Menu.Item>
         </Sidebar>
 
          <Sidebar.Pusher>
           <Grid>
             <Grid.Column width={3}></Grid.Column>
               <Grid.Column width={10}>
-                <Segment basic>
+                <Segment basic className='stretcher'>
                   <div className="App">
                     <Route exact path='/login' render={() => <Login onSendLogin={this.onLogin.bind(this)} isLoggedIn={this.isLoggedIn} />} />
                     <Route exact path='/signup' component={SignUpForm} />
@@ -159,13 +180,16 @@ class App extends Component {
                       handleChange={this.handleChange}
                       handleSearchSubmit={this.handleSearchSubmit}
                     />} />
+                    <Route exact path='/friends' component={Auth(FriendsContainer)} />
                     <Route exact path='/new/jobpost' component={JobPostingForm} />
                     <Route exact path='/jobs' render={() => <JobsContainer
                       jobPostings={this.state.jobPostings}
                       handleChange={this.handleChange}
                       handleJobSearchSubmit={this.handleJobSearchSubmit}
                     />} />
-                    <Route path='/jobs/:id' render={() => <Job org={this.state.organizations} />} />
+                    <Route path='/jobs/:id' render={() => <Job
+                      currentUser={this.state.currentUser}
+                    />} />
                     <Route eaxact path='/organization/home' component={OrgHomeContainer} />
                     <Route path='/users/:id' render={() => <UserProfileContainer
                       users={this.state.users}

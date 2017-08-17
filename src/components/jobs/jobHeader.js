@@ -12,12 +12,19 @@ const JobHeader = (props) => {
           {title}
         </Header.Content>
       </Header>
-      <Button
+      {props.hasApplied ?
+        <Button
+          color='grey'
+          content='Applied'
+          label={{ basic: true, color: 'grey', pointing: 'left', content: aps }}
+        />
+        :
+        <Button
         color='blue'
         content='Apply'
         label={{ basic: true, color: 'blue', pointing: 'left', content: aps }}
         onClick={props.show}
-      />
+      />}
     </div>
   )
 }

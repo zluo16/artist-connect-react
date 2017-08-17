@@ -3,6 +3,7 @@ import { Header, Icon, Button } from 'semantic-ui-react'
 
 const UserHeader = (props) => {
   const fullName = `${props.user.first_name} ${props.user.last_name}`
+  const friendNum = `${props.user.friend_num}`
   return (
     <div>
       <Header as='h2' icon textAlign='center'>
@@ -14,7 +15,7 @@ const UserHeader = (props) => {
       <Button
         color='blue'
         content='Connect'
-        label={{ basic: true, color: 'blue', pointing: 'left', content: '231' }}
+        label={{ basic: true, color: 'blue', pointing: 'left', content: friendNum }}
         onClick={() => props.handleConnect(props.user.id)}
       />
     </div>

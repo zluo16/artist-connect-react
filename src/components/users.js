@@ -13,6 +13,7 @@ const Users = (props) => {
         />
         <Form.Button content='Go' />
       </Form>
+      <br></br>
 
       <Grid>
         <Grid.Column>

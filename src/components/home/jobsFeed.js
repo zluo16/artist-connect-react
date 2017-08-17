@@ -6,7 +6,6 @@ export default class JobsFeed extends Component {
 
   state = {
     job_postings: [],
-    organizations: []
   }
 
   componentWillMount() {
@@ -21,26 +20,12 @@ export default class JobsFeed extends Component {
     .then(res => {
       this.setState({ job_postings: res.reverse() })
     })
-
-    fetch('http://localhost:3000/api/v1/organizations', {
-      headers: {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-        'Authorization': localStorage.getItem('jwt')
-      }
-    })
-    .then(res => res.json())
-    .then(res => {
-      this.setState({ organizations: res })
-    })
   }
 
   jobEvents() {
     return this.state.job_postings.map(job => {
-      let org = this.state.organizations.find(org => org.id == job.organization.id)
-
       return {
-        summary: `${org.name} is looking for a ${job.title}`,
+        summary: `${job.org.name} is looking for a ${job.title}`,
         meta: `${job.applications.length} applied`,
         as: Link,
         to: `/jobs/${job.id}`

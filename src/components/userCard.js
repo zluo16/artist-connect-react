@@ -8,6 +8,7 @@ const UserCard = (props) => {
 
   return (
     <Card
+      raised
       as={Link}
       to={userUrl}
       header={header}
