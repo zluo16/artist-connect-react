@@ -10,7 +10,7 @@ import OrgSignupForm from './components/orgSignupForm'
 import HomeContainer from './components/home/homeContainer'
 import OrgHomeContainer from './components/orgContainer'
 import Users from './components/users'
-import UserProfileContainer from './components/UserProfileContainer'
+import UserProfile from './components/UserProfileContainer'
 import JobsContainer from './components/jobs/jobsContainer'
 import Job from './components/jobs/job'
 import JobPostingForm from './components/jobs/jobPostingForm'
@@ -39,10 +39,13 @@ class App extends Component {
       headers: AuthAdapter.headers
     },
     currentUser: {},
+    friends: [],
+    posts: [],
     users: [],
     jobPostings: [],
     organizations: [],
-    searchTerms: ''
+    searchTerms: '',
+    loading: true
   }
 
   isLoggedIn = () => !!window.localStorage.jwt
@@ -64,7 +67,7 @@ class App extends Component {
     this.context.router.history.push('/login')
   }
 
-  componentWillMount() {
+  componentDidMount() {
     fetch('http://localhost:3000/api/v1/users', {
       headers: {
         'content-type': 'application/json',
@@ -77,39 +80,51 @@ class App extends Component {
       this.setState({ users: res })
     })
 
-    fetch('http://localhost:3000/api/v1/job_postings', {
-      headers: {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-        'Authorization': localStorage.getItem('jwt')
-      }
-    })
-    .then(res => res.json())
-    .then(res => {
-      this.setState({ jobPostings: res })
-    })
+    // fetch('http://localhost:3000/api/v1/job_postings', {
+    //   headers: {
+    //     'content-type': 'application/json',
+    //     'accept': 'application/json',
+    //     'Authorization': localStorage.getItem('jwt')
+    //   }
+    // })
+    // .then(res => res.json())
+    // .then(res => {
+    //   this.setState({ jobPostings: res })
+    // })
 
-    fetch('http://localhost:3000/api/v1/organizations', {
-      headers: {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-        'Authorization': localStorage.getItem('jwt')
-      }
-    })
-    .then(res => res.json())
-    .then(res => {
-      this.setState({ organizations: res })
-    })
+    // fetch('http://localhost:3000/api/v1/organizations', {
+    //   headers: {
+    //     'content-type': 'application/json',
+    //     'accept': 'application/json',
+    //     'Authorization': localStorage.getItem('jwt')
+    //   }
+    // })
+    // .then(res => res.json())
+    // .then(res => {
+    //   this.setState({ organizations: res })
+    // })
 
-    fetch('http://localhost:3000/api/v1/me', {
-      headers: {
-        'content-type': 'application/json',
-        'accept': 'application/json',
-        'Authorization': localStorage.getItem('jwt')
-      }
+    AuthAdapter.currentUser()
+    .then(currentUser => {
+      this.setState({ currentUser, friends: currentUser.friends })
+      AuthAdapter.fetchPosts()
+      .then(res => {
+        const posts = res.filter(post => {
+          let firstTruth = post.user.id == currentUser.id
+          let secondTruth = this.state.friends.map(f => f.id)
+          .includes(post.user.id)
+          return firstTruth || secondTruth
+        }).reverse()
+        this.setState({ posts })
+        this.setState({
+          loading: false,
+          post: {
+            ...this.state.post,
+            user_id: currentUser.id
+          }
+        })
+      })
     })
-    .then(res => res.json())
-    .then(currentUser => this.setState({ currentUser }))
   }
 
   handleChange = (event) => {
@@ -129,15 +144,15 @@ class App extends Component {
     this.setState({ users: filteredUsers, searchTerms: '' })
   }
 
-  handleJobSearchSubmit = (event) => {
-    event.preventDefault()
-    let filteredJobs = this.state.jobPostings.filter(job => {
-      let searchTerms = this.state.searchTerms.toLowerCase()
-      let firstTruth = job.title.toLowerCase() === searchTerms
-
-      return firstTruth
-    })
-  }
+  // handleJobSearchSubmit = (event) => {
+  //   event.preventDefault()
+  //   let filteredJobs = this.state.jobPostings.filter(job => {
+  //     let searchTerms = this.state.searchTerms.toLowerCase()
+  //     let firstTruth = job.title.toLowerCase() === searchTerms
+  //
+  //     return firstTruth
+  //   })
+  // }
 
   render() {
     return (
@@ -154,13 +169,13 @@ class App extends Component {
             to='/home'><Icon name="home" />Home</Menu.Item>
           <Menu.Item
             as={Link}
-            to='/users'><Icon name="add user" />Users</Menu.Item>
+            to='/users'><Icon name="users" />Users</Menu.Item>
           <Menu.Item
             as={Link}
             to='/friends'><Icon name="smile" />Friends</Menu.Item>
           <Menu.Item
             as={Link}
-            to='/jobs'><Icon name="money" />Find Job</Menu.Item>
+            to='#'><Icon name="add user" />Friend Requests</Menu.Item>
           <Menu.Item
             onClick={this.handleLogout}><Icon name="lock" />Logout</Menu.Item>
         </Sidebar>
@@ -174,8 +189,13 @@ class App extends Component {
                     <Route exact path='/login' render={() => <Login onSendLogin={this.onLogin.bind(this)} isLoggedIn={this.isLoggedIn} />} />
                     <Route exact path='/signup' component={SignUpForm} />
                     <Route exact path='/organization/new' component={OrgSignupForm} />
-                    <Route exact path='/home' component={Auth(HomeContainer)} />
+                    <Route path='/home' component={Auth(HomeContainer, {
+                      currentUser: this.state.currentUser,
+                      friends: this.state.friends,
+                      posts: this.state.posts
+                    })} />
                     <Route exact path='/users' render={() => <Users
+                      loading={this.state.loading}
                       users={this.state.users}
                       handleChange={this.handleChange}
                       handleSearchSubmit={this.handleSearchSubmit}
@@ -191,8 +211,9 @@ class App extends Component {
                       currentUser={this.state.currentUser}
                     />} />
                     <Route eaxact path='/organization/home' component={OrgHomeContainer} />
-                    <Route path='/users/:id' render={() => <UserProfileContainer
+                    <Route path='/users/:id' render={() => <UserProfile
                       users={this.state.users}
+                      currentUser={this.state.currentUser}
                     />} />
                   </div>
                 </Segment>

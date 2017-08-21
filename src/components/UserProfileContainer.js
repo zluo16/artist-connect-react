@@ -9,7 +9,8 @@ export default class UserProfile extends Component {
   }
 
   state = {
-    user: {}
+    user: {},
+    checkFriends: false
   }
 
   componentWillMount() {
@@ -26,8 +27,12 @@ export default class UserProfile extends Component {
     })
     .then(res => res.json())
     .then(user => {
-      this.setState({ user })
+      this.setState({ user, checkFriends: this.checkFriends(user) })
     })
+  }
+
+  checkFriends(user) {
+    return !!user.friends.find(friend => friend.id == this.props.currentUser.id)
   }
 
   createConnection = (connectionId) => {
@@ -42,12 +47,23 @@ export default class UserProfile extends Component {
     })
     .then(res => res.json())
     .then(res => console.log(res))
+    this.setState({
+      user: {
+        ...this.state.user,
+        friend_num: this.state.user.friend_num += 1
+      }
+    })
+    this.setState({ checkFriends: true })
   }
 
   render() {
     return (
       <div>
-        <UserHeader user={this.state.user} handleConnect={this.createConnection} />
+        <UserHeader
+          user={this.state.user}
+          handleConnect={this.createConnection}
+          checkFriends={this.state.checkFriends}
+        />
       </div>
     )
   }

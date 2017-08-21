@@ -12,7 +12,7 @@ export default class JobPostingForm extends Component {
     description: '',
     responsibilities: '',
     qualifications: '',
-    organization_id: 1 
+    organization_id: 1
   }
 
   handleChange = (event) => this.setState({ [event.target.name]: event.target.value })

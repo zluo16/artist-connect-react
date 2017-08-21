@@ -12,12 +12,19 @@ const UserHeader = (props) => {
           {fullName}
         </Header.Content>
       </Header>
-      <Button
+      {props.checkFriends ?
+        <Button
+          color='grey'
+          content='Connected'
+          label={{ basic: true, color: 'grey', pointing: 'left', content: friendNum }}
+        />
+        :
+        <Button
         color='blue'
         content='Connect'
         label={{ basic: true, color: 'blue', pointing: 'left', content: friendNum }}
         onClick={() => props.handleConnect(props.user.id)}
-      />
+      />}
     </div>
   )
 }

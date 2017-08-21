@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-export default function (Component, headers, props) {
+export default function (ComposedComponent, props) {
   class Authentication extends Component {
     static contextTypes = {
       router: PropTypes.object
@@ -20,7 +20,7 @@ export default function (Component, headers, props) {
     }
 
     render() {
-      return <Component {...props} />
+      return <ComposedComponent {...props} />
     }
   }
 

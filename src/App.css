@@ -35,3 +35,7 @@
 .stretcher {
   height: 1000px !important;
 }
+
+.hold-panes {
+  height: 800px !important;
+}

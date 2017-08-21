@@ -13,7 +13,28 @@ export default class AuthAdapter {
     return fetch(`${baseUrl}/me`, {
       headers: headers()
     }).then(res => res.json())
-    .then(res => res)
+  }
+
+  static fetchPosts() {
+    return fetch('http://localhost:3000/api/v1/posts', {
+      headers: headers()
+    }).then(res => res.json())
+  }
+
+  static fetchSinglePost(id) {
+    return fetch(`${baseUrl}/posts/${id}`, {
+      headers: headers()
+    }).then(res => res.json())
+  }
+
+  static fetchPostComments(id) {
+    return fetch(`${baseUrl}/posts/${id}/comments`, {
+      headers: headers()
+    }).then(res => res.json())
+  }
+
+  static baseUrl() {
+    return 'http://localhost:3000/api/v1'
   }
 }
 

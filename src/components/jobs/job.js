@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Modal, Button, Form, Container, Header } from 'semantic-ui-react'
+import { Modal, Button, Form, Container, Header, Divider } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import JobHeader from './jobHeader'
 import ApplicationForm from './applicationForm'
@@ -100,11 +100,14 @@ export default class Job extends Component {
           hasApplied={this.state.hasApplied}
         />
         <br></br>
-        <Container text>
-          <Header as='h2'>{titleHeader}</Header>
+        <Header as='h2'>{titleHeader}</Header>
+        <Container text textAlign='justified'>
+          <Divider />
           <p>{job.description}</p>
+          <Divider />
           <p>{job.responsibilities}</p>
           <p>{job.qualifications}</p>
+          <Divider />
         </Container>
 
         <Modal size='small' open={open} onClose={this.close}>
