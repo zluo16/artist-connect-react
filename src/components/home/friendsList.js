@@ -1,5 +1,5 @@
 import React from 'react'
-import UserCard from '../userCard'
+import UserCard from '../users/userCard'
 import { Card } from 'semantic-ui-react'
 
 const FriendsList = (props) => {

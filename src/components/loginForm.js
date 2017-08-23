@@ -21,6 +21,8 @@ class Login extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
+    //TODO: make form a controlled inpout by having value tied to state
+    // input type="text" value={this.state.email} />
   }
 
   handleSubmit(e) {

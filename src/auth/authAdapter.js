@@ -9,8 +9,20 @@ export default class AuthAdapter {
     }).then(res => res.json())
   }
 
+  static fetchUsers() {
+    return fetch(`${baseUrl}/users`, {
+      headers: headers()
+    }).then(res => res.json())
+  }
+
   static currentUser() {
     return fetch(`${baseUrl}/me`, {
+      headers: headers()
+    }).then(res => res.json())
+  }
+
+  static fetchUser(id) {
+    return fetch(`${baseUrl}/users/${id}`, {
       headers: headers()
     }).then(res => res.json())
   }
@@ -23,6 +35,12 @@ export default class AuthAdapter {
 
   static fetchSinglePost(id) {
     return fetch(`${baseUrl}/posts/${id}`, {
+      headers: headers()
+    }).then(res => res.json())
+  }
+
+  static fetchPostsFromUser(id) {
+    return fetch(`${baseUrl}/posts/users/${id}`, {
       headers: headers()
     }).then(res => res.json())
   }

@@ -1,91 +1,74 @@
 import React, { Component } from 'react'
 import { Tab, Grid } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
-import Users from '../users/users'
-import PostBox from './postBox'
+import UserHeader from './header'
+import UserInfo from './userInfo'
+import UserFriends from './userFriends'
+import FeedList from '../home/feed'
 import AuthAdapter from '../../auth/authAdapter'
 import { Route } from 'react-router-dom'
-import JobsFeed from './jobsFeed'
-import FeedList from './feed'
-import PostShow from './postShow'
 
 const baseUrl = AuthAdapter.baseUrl()
 
-export default class HomeContainer extends Component {
+export default class UserProfile extends Component {
   static contextTypes = {
-    router: PropTypes
+    router: PropTypes.object
   }
 
   state = {
+    user: {},
+    friends: [],
+    checkFriends: true,
     posts: [],
-    post: {
-      text: '',
-      likes: null,
-      link: null,
-      user_id: 0,
-    },
     selectedPost: {
       comments: {}
     },
     commentText: ''
   }
 
-  displayPost = () =>  {
-    const idUrl = this.context.router.history.location.pathname
-    console.log('before post', idUrl);
-    const post = this.state.posts.find(post => {
-      return post.id == idUrl.split("/")[idUrl.split('/').length - 1]
-    })
-    console.log('after post in displayPost', post);
-    // debugger
-    return post
-    // if homeContainer has a posts/1 then we need componentDidMount to fetch the extra post
-  }
-
   componentDidMount() {
-    console.log('component did mount');
-    AuthAdapter.currentUser()
-    .then(currentUser => {
-      AuthAdapter.fetchPosts()
-      .then(res => {
-        const posts = res.filter(post => {
-          let firstTruth = post.user.id == currentUser.id
-          let secondTruth = currentUser.friends.map(f => f.id)
-          .includes(post.user.id)
-          return firstTruth || secondTruth
-        }).sort((p1, p2) => p2.id - p1.id)
-        // this.setState({ posts })
+    const idUrl = this.context.router.history.location.pathname
+    const controller = idUrl.split("/")[idUrl.split("/").length - 2]
+
+    const id = controller == 'users' ? idUrl.split("/")[idUrl.split("/").length - 1] :
+    idUrl.split("/")[idUrl.split("/").length - 3]
+
+    AuthAdapter.fetchUser(id)
+    .then(user => {
+      this.setState({ user, friends: user.friends, checkFriends: this.checkFriends(user) })
+      AuthAdapter.fetchPostsFromUser(id)
+      .then(posts => {
+        const sortedPosts = posts.sort((p1, p2) => p2.id - p1.id)
+        console.log('api call posts', sortedPosts);
         this.setState({
-          posts: posts,
-          post: {
-            ...this.state.post,
-            user_id: currentUser.id
-          }
+          posts: sortedPosts
         }, this.setSelectedPost)
       })
     })
   }
 
   setSelectedPost() {
-    console.log(this.displayPost());
-    if (this.displayPost()) {
-      AuthAdapter.fetchSinglePost(this.displayPost().id)
+    const idUrl = this.context.router.history.location.pathname
+    const id = idUrl.split("/")[idUrl.split("/").length - 1]
+
+    if (idUrl.split("/")[idUrl.split("/").length - 2] === 'posts') {
+      AuthAdapter.fetchSinglePost(id)
       .then(post => {
         const newpost = Object.assign({}, this.state.selectedPost, post)
         this.setState({ selectedPost: newpost })
-        AuthAdapter.fetchPostComments(this.displayPost().id)
+        AuthAdapter.fetchPostComments(id)
         .then(comments => {
           // debugger
           const postWithComments = Object.assign({}, this.state.selectedPost, {comments: comments})
-          this.setState({ selectedPost: postWithComments, mounted: true})
+          this.setState({ selectedPost: postWithComments })
         })
         // debugger
       })
     }
   }
 
-  addPost = (post) => {
-    this.setState({ posts: this.state.posts.unshift(post) })
+  checkFriends(user) {
+    return !!user.friends.find(friend => friend.id == this.props.currentUser.id)
   }
 
   handleSubmitPost = () => {
@@ -103,9 +86,8 @@ export default class HomeContainer extends Component {
             .includes(post.user.id)
         return firstTruth || secondTruth
       }).sort((p1, p2) => p2.id - p1.id)
-      // this.setState({ posts })
+      this.setState({ posts })
       this.setState({
-        posts: posts,
         post: {
           ...this.state.post,
           user_id: this.props.currentUser.id
@@ -158,58 +140,90 @@ export default class HomeContainer extends Component {
     this.setState({ commentText: event.target.value })
   }
 
-  handleChange = (event) => {
-    this.setState({
-      post: {
-        ...this.state.post,
-        text: event.target.value
+  createConnection = (connectionId) => {
+    fetch('http://localhost:3000/api/v1/user_connections', {
+      method: 'POST',
+      body: JSON.stringify({ connectionId }),
+      headers: {
+        'content-type': 'application/json',
+        'accept': 'application/json',
+        'Authorization': localStorage.getItem('jwt')
       }
     })
+    .then(res => res.json())
+    .then(res => console.log(res))
+    this.setState({
+      user: {
+        ...this.state.user,
+        friend_num: this.state.user.friend_num += 1
+      }
+    })
+    this.setState({ checkFriends: true })
+  }
+
+  displayPost() {
+    const idUrl = this.context.router.history.location.pathname
+    if (this.state.posts.length > 0) {
+      const post = this.state.posts.find(post => {
+        return post.id == idUrl.split("/")[idUrl.split('/').length - 1]
+      })
+      return post
+    }
   }
 
   render() {
-    console.log("Home Container State", this.state.posts)
-    const show = '/home/posts'
+    console.log('Render Posts: ', this.state.posts);
+    const postShow = `/users/${this.state.user.id}/posts`
 
     const panes = [
       { menuItem: 'Posts', render: () => (
-        <Tab.Pane className='hold-panes'>
+        <Tab.Pane attached={false} className='hold-panes'>
           <FeedList
             currentUser={this.props.currentUser}
             posts={this.state.posts}
             post={this.displayPost()}
-            postShow={show}
+            postShow={postShow}
+            setSelectedPost={this.setSelectedPost.bind(this)}
             selectedPost={this.state.selectedPost}
             handleChange={this.handleCommentChange}
             handleSubmit={this.handleSubmitComment}
             handleLike={this.handleLike}
           />
         </Tab.Pane>
-    ) },
-      { menuItem: 'Messages', render: () => <Tab.Pane></Tab.Pane> }
+      ) },
+        { menuItem: 'Info', render: () => (
+          <Tab.Pane attached={false}>
+            <UserInfo
+              user={this.state.user}
+            />
+          </Tab.Pane>
+      ) },
+        { menuItem: 'Friends', render: () => (
+          <Tab.Pane attached={false}>
+            <UserFriends
+              user_id={this.state.user.id}
+            />
+          </Tab.Pane>
+      ) }
     ]
 
     return (
       <div>
-        <PostBox
-          user={this.state.currentUser}
-          addPost={this.addPost}
-          handleSubmit={this.handleSubmitPost}
-          handleChange={this.handleChange}
+        <UserHeader
+          user={this.state.user}
+          handleConnect={this.createConnection}
+          checkFriends={this.state.checkFriends}
         />
 
-        <Route exact path="/home" render={() => {
-        return( <Grid>
+         <Grid>
             <Grid.Column width={2}></Grid.Column>
             <Grid.Column width={12}>
               <Tab menu={{ secondary: true, pointing: true }} panes={panes} defaultActiveIndex={0} />
             </Grid.Column>
             <Grid.Column width={2}></Grid.Column>
-          </Grid>)
-        }}
-      />
+          </Grid>
 
-      <Route path="/home/posts/:id" render={() => {
+      {/* <Route path="/posts/:id" render={() => {
       return( <Grid>
           <Grid.Column width={2}></Grid.Column>
           <Grid.Column width={12}>
@@ -218,7 +232,7 @@ export default class HomeContainer extends Component {
           <Grid.Column width={2}></Grid.Column>
         </Grid>)
       }}
-    />
+    /> */}
 
       </div>
     )

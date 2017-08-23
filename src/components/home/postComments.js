@@ -1,23 +1,21 @@
 import React from 'react'
-import { Comment, Header } from 'semantic-ui-react'
+import { Comment, Loader } from 'semantic-ui-react'
 
 const PostComments = ({ comments }) => {
   return(
-    <Comment.Group>
-      <Header as='h3' dividing>Comments</Header>
+    <Comment.Group className='hold-comments'>
       {comments.length > 0 ?
         comments.map(comment => {
-          const commentUser = `${comment.user.first_name} ${comment.user.last_name}`
-
           return (
             <Comment>
               <Comment.Content>
-                <Comment.Author as='a'>{commentUser}</Comment.Author>
+                { comment.user ? <Comment.Author as='a'>{`${comment.user.first_name} ${comment.user.last_name}`}</Comment.Author> : null }
+
                 <Comment.Text>{comment.text}</Comment.Text>
               </Comment.Content>
             </Comment>
           )
-        }) : null
+        }) : <Loader active inline='centered' />
       }
     </Comment.Group>
   )

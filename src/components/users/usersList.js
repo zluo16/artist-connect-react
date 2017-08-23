@@ -6,8 +6,8 @@ const UsersList = (props) => {
   return (
     <Card.Group itemsPerRow={4}>
       {props.users !== null ? props.users.map(user => {
-        return <UserCard
-          user={user}
+        return <UserCard key={user.id}
+          user={user} visible={props.visible}
         />
       }) : null}
     </Card.Group>

@@ -1,72 +1,29 @@
-import React, { Component } from 'react'
-import { Input, Comment, Container, Divider, Feed, Icon, Form, Header } from 'semantic-ui-react'
+import React from 'react'
+import { Input, Comment, Container, Divider, Feed, Icon, Form, Header, Loader } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import PostComments from './postComments'
 import SinglePost from './singlePost'
 import AuthAdapter from '../../auth/authAdapter'
 
-export default class PostShow extends Component {
-  static contextTypes = {
-    router: PropTypes
-  }
+const PostShow = ({ post, currentUser, selectedPost, handleChange, handleSubmit, handleLike }) => {
+  // const userName = `${this.props.post.user.first_name} ${this.props.post.user.last_name}`
+  // debugger
+  return (
+    <Container textAlign='left'>
+      { !!selectedPost.user ? null : <Loader active inline='centered' /> }
+      <SinglePost post={selectedPost} handleLike={handleLike} />
 
-  state = {
-    text: '',
-    post: {},
-    comments: [],
-    comment: {},
-    mounted: false
-  }
+      <Form onSubmit={handleSubmit}>
+        <Input
+          action={{ color: 'grey', labelPosition: 'right', icon: 'comments', content: 'Comment', type: 'submit' }}
+          onChange={handleChange}
+        />
+      </Form>
 
-  componentDidMount() {
-    const idUrl = this.context.router.history.location.pathname
-    const id = idUrl.split("/")[idUrl.split('/').length - 1]
-
-    AuthAdapter.fetchSinglePost(id)
-    .then(post => {
-      this.setState({ post })
-      // debugger
-    })
-
-    AuthAdapter.fetchPostComments(id)
-    .then(comments => {
-      this.setState({ comments, mounted: true })
-    })
-  }
-
-  handleSubmit = () => {
-    fetch('http://localhost:3000/api/v1/comments', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(Object.assign({}, { text: this.state.text, user_id: this.props.currentUser.id }, { post_id: this.props.post.id }))
-    }).then(res => res.json())
-    .then(comments => {
-      this.setState({ comments })
-    })
-  }
-
-  handleChange = (event) => {
-    this.setState({ text: event.target.value })
-  }
-
-  render() {
-    // const userName = `${this.props.post.user.first_name} ${this.props.post.user.last_name}`
-    // debugger
-    return (
-      <Container textAlign='left'>
-        {this.state.mounted ? <SinglePost post={this.state.post} /> : null}
-
-        <Form onSubmit={this.handleSubmit}>
-          <Input
-            action={{ color: 'grey', labelPosition: 'right', icon: 'comments', content: 'Comment', type: 'submit' }}
-            onChange={this.handleChange}
-          />
-        </Form>
-
-        {this.state.mounted ? <PostComments comments={this.state.comments} /> : null}
-      </Container>
-    )
-  }
+      <Header as='h3' dividing>Comments</Header>
+      <PostComments comments={selectedPost.comments} />
+    </Container>
+  )
 }
+
+export default PostShow

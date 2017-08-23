@@ -19,9 +19,9 @@ export default class PostBox extends Component {
             <Card fluid>
               <Card.Content>
                 <Comment.Group>
-                  <Comment textAlign='left'>
+                  <Comment>
                     <Comment.Avatar as='a' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeLYSz-hjdBj-5gYzX3KAKjWzL_yDqI8d5DNhK3BxKDLDhROmZosz4Nt0' />
-                    <Comment.Content floated>
+                    <Comment.Content>
                       <Comment.Text>Write Something</Comment.Text>
                       <Comment.Actions>What's on your mind?</Comment.Actions>
                       <Form onSubmit={this.props.handleSubmit}>
