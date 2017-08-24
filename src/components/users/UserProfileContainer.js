@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Tab, Grid } from 'semantic-ui-react'
+import { Tab, Grid, Transition } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import UserHeader from './header'
 import UserInfo from './userInfo'
@@ -23,7 +23,8 @@ export default class UserProfile extends Component {
     selectedPost: {
       comments: {}
     },
-    commentText: ''
+    commentText: '',
+    mounted: false
   }
 
   componentDidMount() {
@@ -50,6 +51,8 @@ export default class UserProfile extends Component {
   setSelectedPost() {
     const idUrl = this.context.router.history.location.pathname
     const id = idUrl.split("/")[idUrl.split("/").length - 1]
+
+    this.setState({ mounted: !this.state.mounted })
 
     if (idUrl.split("/")[idUrl.split("/").length - 2] === 'posts') {
       AuthAdapter.fetchSinglePost(id)
@@ -188,6 +191,7 @@ export default class UserProfile extends Component {
             handleChange={this.handleCommentChange}
             handleSubmit={this.handleSubmitComment}
             handleLike={this.handleLike}
+            mounted={this.state.mounted}
           />
         </Tab.Pane>
       ) },
@@ -215,24 +219,32 @@ export default class UserProfile extends Component {
           checkFriends={this.state.checkFriends}
         />
 
-         <Grid>
-            <Grid.Column width={2}></Grid.Column>
-            <Grid.Column width={12}>
-              <Tab menu={{ secondary: true, pointing: true }} panes={panes} defaultActiveIndex={0} />
-            </Grid.Column>
-            <Grid.Column width={2}></Grid.Column>
-          </Grid>
+        <Route path='/users/:id' render={() => (
+          <Transition visible={this.state.mounted} animation='fade up' duration={700}>
+            <Grid>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={12}>
+                <Tab menu={{ secondary: true, pointing: true }} panes={panes} defaultActiveIndex={0} />
+              </Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+            </Grid>
+          </Transition>
+        )} />
 
-      {/* <Route path="/posts/:id" render={() => {
-      return( <Grid>
-          <Grid.Column width={2}></Grid.Column>
-          <Grid.Column width={12}>
-            <Tab menu={{ secondary: true, pointing: true }} panes={panes} defaultActiveIndex={0} />
-          </Grid.Column>
-          <Grid.Column width={2}></Grid.Column>
-        </Grid>)
-      }}
-    /> */}
+        <Route path="/users/:id/posts/:id" render={() => {
+        return(
+          <Transition visible={this.state.mounted} animation='fade up' duration={700}>
+            <Grid>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={12}>
+                <Tab menu={{ secondary: true, pointing: true }} panes={panes} defaultActiveIndex={0} />
+              </Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+            </Grid>
+          </Transition>
+          )
+        }}
+      />
 
       </div>
     )

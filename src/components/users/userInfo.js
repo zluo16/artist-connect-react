@@ -11,13 +11,7 @@ export default class UserInfo extends Component {
     const { activeItem } = this.state
 
     return (
-      <div>
-        <Menu pointing secondary vertical>
-          <Menu.Item name='About' />
-          <Menu.Item name='Education' />
-          <Menu.Item name='Location' />
-        </Menu>
-
+      <div className='hold-post-show'>
         {!!this.props.user.about ? <Container text textAlign='justified'>
           <Header as='h2'>About</Header>
           <p>{this.props.user.about}</p>
@@ -33,7 +27,7 @@ export default class UserInfo extends Component {
             })}
             <Divider />
           </div> : null}
-        </Container> : <Loader active inline='centered' />}
+        </Container> : null}
       </div>
     )
   }

@@ -66,6 +66,21 @@
   height: 700px !important;
 }
 
+.hold-user-friends {
+  height: 500px !important;
+  overflow-y: auto;
+}
+
+.back-img {
+  background: url('./background-imgs/alex-jodoin-246078.jpg');
+  /*bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;*/
+  /*width: 100% !important;*/
+  /*height: 1000px !important;*/
+  z-index: -1 !important;
+}
+
 .text-align-left {
   text-align: left !important;
 }
@@ -107,6 +122,10 @@
 
 .left-margin {
   margin-left: 7px !important;
+}
+
+.left-box-margin {
+  margin-left: 20px !important;
 }
 
 .comment-text-left {

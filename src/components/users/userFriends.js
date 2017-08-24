@@ -14,7 +14,7 @@ export default class UserFriends extends Component {
 
   render() {
     return (
-      <Grid className='hold-users'>
+      <Grid className='hold-user-friends'>
         <Grid.Column>
         <UsersList users={this.state.friends} />
         </Grid.Column>

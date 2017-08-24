@@ -21,7 +21,7 @@ const PostComments = ({ comments }) => {
               </Comment.Content>
             </Comment>
           )
-        }) : <Loader active inline='centered' />
+        }) : null
       }
     </Comment.Group>
   )

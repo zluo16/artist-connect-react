@@ -4,14 +4,7 @@ import { Link } from 'react-router-dom'
 import '../App.css'
 import 'semantic-ui-css/semantic.min.css';
 
-// const style = {
-//   height: '100vh',
-//   backgroundSize: 'cover',
-//   overflow: 'hidden',
-//   background: `url(${})`
-// }
-
-class Login extends Component {
+export default class Login extends Component {
 
   constructor() {
     super()
@@ -24,10 +17,6 @@ class Login extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
-
-  // componentDidMount() {
-  //   this.setState({ mounted: !this.state.mounted })
-  // }
 
   handleChange(e) {
     this.setState({
@@ -46,6 +35,10 @@ class Login extends Component {
 
   handleMount = (e) => {
     this.setState({ mounted: true })
+  }
+
+  handleDemo = (e) => {
+    this.setState({ email: 'mike@mike.mike', password: 'test' }, this.handleSubmit(e))
   }
 
   render() {
@@ -82,6 +75,9 @@ class Login extends Component {
                     secondary
                     as={Link}
                     to='/signup'>Sign Up</Button>
+                  <Button
+                    secondary
+                    onClick={this.handleDemo}>Demo</Button>
                 </div>
               </Transition>
             </Form>
@@ -92,5 +88,3 @@ class Login extends Component {
     )
   }
 }
-
-export default Login

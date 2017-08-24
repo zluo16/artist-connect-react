@@ -165,10 +165,10 @@ class App extends Component {
       <div>
         {this.isLoggedIn() ?
           <div>
-            <Switch><Redirect from='/' to='/home' /></Switch>
-            <Menu secondary attached="top">
+            {/* <Switch><Redirect from='/' to='/home' /></Switch> */}
+            <Menu secondary color={12} attached="top">
             <Menu.Item onClick={() => this.setState({ menuVisible: !this.state.menuVisible })} >
-              <Icon name="sidebar" />Menu
+              <Icon name="sidebar"/>Menu
             </Menu.Item>
           </Menu>
         <Sidebar.Pushable as={Segment} attached="bottom" >

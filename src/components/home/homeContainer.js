@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Tab, Grid } from 'semantic-ui-react'
+import { Tab, Grid, Transition } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import Users from '../users/users'
 import PostBox from './postBox'
@@ -27,7 +27,8 @@ export default class HomeContainer extends Component {
     selectedPost: {
       comments: {}
     },
-    commentText: ''
+    commentText: '',
+    mounted: false
   }
 
   displayPost = () =>  {
@@ -67,6 +68,7 @@ export default class HomeContainer extends Component {
   }
 
   setSelectedPost() {
+    this.setState({ mounted: !this.state.mounted })
     console.log(this.displayPost());
     if (this.displayPost()) {
       AuthAdapter.fetchSinglePost(this.displayPost().id)
@@ -183,40 +185,50 @@ export default class HomeContainer extends Component {
             handleChange={this.handleCommentChange}
             handleSubmit={this.handleSubmitComment}
             handleLike={this.handleLike}
+            mounted={this.state.mounted}
           />
         </Tab.Pane>
-    ) },
-      { menuItem: 'Messages', render: () => <Tab.Pane></Tab.Pane> }
+    ) }
     ]
 
     return (
       <div>
-        <PostBox
-          user={this.state.currentUser}
-          addPost={this.addPost}
-          handleSubmit={this.handleSubmitPost}
-          handleChange={this.handleChange}
-        />
+        <Transition visible={this.state.mounted} animation='fade' duration={700}>
+          <PostBox
+            user={this.props.currentUser}
+            addPost={this.addPost}
+            handleSubmit={this.handleSubmitPost}
+            handleChange={this.handleChange}
+          />
+        </Transition>
 
         <Route path="/home" render={() => {
-        return( <Grid>
+        return(
+          <Transition visible={this.state.mounted} animation='fade up' duration={700}>
+            <Grid>
+              <Grid.Column width={2}></Grid.Column>
+              <Grid.Column width={12}>
+                <Tab menu={{ secondary: true, pointing: true }} panes={panes} defaultActiveIndex={0} />
+              </Grid.Column>
+              <Grid.Column width={2}></Grid.Column>
+            </Grid>
+          </Transition>
+          )
+        }}
+      />
+
+      <Route path="/posts/:id" render={() => {
+      return(
+        <Transition visible={this.state.mounted} animation='fade up' duration={700}>
+          <Grid>
             <Grid.Column width={2}></Grid.Column>
             <Grid.Column width={12}>
               <Tab menu={{ secondary: true, pointing: true }} panes={panes} defaultActiveIndex={0} />
             </Grid.Column>
             <Grid.Column width={2}></Grid.Column>
-          </Grid>)
-        }}
-      />
-
-      <Route path="/posts/:id" render={() => {
-      return( <Grid>
-          <Grid.Column width={2}></Grid.Column>
-          <Grid.Column width={12}>
-            <Tab menu={{ secondary: true, pointing: true }} panes={panes} defaultActiveIndex={0} />
-          </Grid.Column>
-          <Grid.Column width={2}></Grid.Column>
-        </Grid>)
+          </Grid>
+        </Transition>
+        )
       }}
     />
 

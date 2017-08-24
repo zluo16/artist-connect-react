@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Feed, Grid, Loader, Dimmer } from 'semantic-ui-react'
+import { Feed, Grid, Loader, Dimmer, Transition } from 'semantic-ui-react'
 import { Route } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import FeedElement from './feedElement'
@@ -13,13 +13,13 @@ const FeedList = ({
   selectedPost,
   handleChange,
   handleSubmit,
-  handleLike
+  handleLike,
+  mounted
 }) => {
   console.log(selectedPost);
 
-
   const postItems = posts.map(postItem => {
-    return <FeedElement user={postItem.user} post={postItem} handleLike={handleLike} postShow={postShow} />
+    return <FeedElement user={postItem.user} post={postItem} handleLike={handleLike} postShow={postShow} mounted={mounted} />
   })
   console.log(selectedPost)
 
@@ -28,9 +28,11 @@ const FeedList = ({
       <Grid padded divided>
         <Grid.Column width={6} className='hold-posts'>
           <Route path='/users/:id' render={() => (
-            <Feed className='hold-posts'>
-              {postItems}
-            </Feed>
+            // <Transition visible={mounted} animation='fade up' duration={500}>
+              <Feed>
+                {postItems}
+              </Feed>
+            // </Transition>
           )} />
           <Route path='/home' render={() => (
             <Feed>
