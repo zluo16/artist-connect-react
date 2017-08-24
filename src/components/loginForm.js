@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
-import { Button, Form, Segment, Card, Input, Divider, Grid } from 'semantic-ui-react'
+import { Button, Form, Segment, Card, Input, Divider, Grid, Header, Transition } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import '../App.css'
 import 'semantic-ui-css/semantic.min.css';
+
+// const style = {
+//   height: '100vh',
+//   backgroundSize: 'cover',
+//   overflow: 'hidden',
+//   background: `url(${})`
+// }
 
 class Login extends Component {
 
@@ -11,11 +18,16 @@ class Login extends Component {
 
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      mounted: false
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
+
+  // componentDidMount() {
+  //   this.setState({ mounted: !this.state.mounted })
+  // }
 
   handleChange(e) {
     this.setState({
@@ -32,36 +44,49 @@ class Login extends Component {
     this.setState({ email: '', password: '' })
   }
 
+  handleMount = (e) => {
+    this.setState({ mounted: true })
+  }
+
   render() {
+    const { mounted } = this.state
+    const unMounted = !this.state.mounted
+
     return (
-      <div>
+      <div className='login-background' onClick={this.handleMount}>
         <Grid>
-          <Grid.Column width={6}></Grid.Column>
-          <Grid.Column width={4}>
-            <Card>
-              <Segment inverted>
-                <Form onSubmit={this.handleSubmit}>
-                  <Form.Group>
-                    <Form.Input onChange={this.handleChange} name='email' icon='user' iconPosition='left' placeholder='Email Address' width={16} />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Input onChange={this.handleChange} type='password' name='password' icon='unlock alternate' iconPosition='left' placeholder='Password' width={16} />
-                  </Form.Group>
-                  <Button type='submit' inverted className='centered' color='yellow'>Login</Button>
-                </Form>
-                <Divider inverted horizontal>Or</Divider>
-                <Form>
+          <Grid.Column width={5}></Grid.Column>
+          <Grid.Column width={6}>
+            <Header as='h1' className='login-form login-header'>Welcome to basic... </Header>
+            <Header as='h2' className='under-header login-header'>Click anywhere!</Header>
+            <Transition visible={mounted} animation='fade up' duration={1000}>
+              <Header as='h3' className='under-under-header login-header'>Login... </Header>
+            </Transition>
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Field size='huge'>
+                <Transition visible={mounted} animation='fade up' duration={1000}>
+                  <Form.Input onChange={this.handleChange} name='email' icon='user' iconPosition='left' placeholder='Email Address' />
+                </Transition>
+              </Form.Field>
+              <br/>
+              <Form.Field>
+                <Transition visible={mounted} animation='fade up' duration={1000}>
+                  <Form.Input onChange={this.handleChange} type='password' name='password' icon='unlock alternate' iconPosition='left' placeholder='Password' />
+                </Transition>
+              </Form.Field>
+              <br/>
+              <Transition visible={mounted} animation='fade up' duration={1000}>
+                <div>
+                  <Button primary type='submit'>Login</Button>
                   <Button
-                    inverted
-                    className='centered'
-                    color='green'
+                    secondary
                     as={Link}
                     to='/signup'>Sign Up</Button>
-                </Form>
-              </Segment>
-            </Card>
+                </div>
+              </Transition>
+            </Form>
           </Grid.Column>
-          <Grid.Column width={6}></Grid.Column>
+          <Grid.Column width={4}></Grid.Column>
         </Grid>
       </div>
     )

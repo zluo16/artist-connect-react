@@ -1,5 +1,5 @@
 import React from 'react'
-import { Feed, Icon, Divider, Grid, Dimmer, Loader } from 'semantic-ui-react'
+import { Feed, Icon, Divider, Grid, Dimmer, Loader, Image } from 'semantic-ui-react'
 import { Link } from  'react-router-dom'
 
 const FeedElement = (props) => {
@@ -10,12 +10,18 @@ const FeedElement = (props) => {
 
   return (
     <Feed.Event>
+      <Feed.Label>
+        {!!props.user.image_link ?
+          <Image src={props.user.image_link} size='mini' shape='circular' /> :
+          <Image src='https://tracker.moodle.org/secure/attachment/30912/f3.png' size='mini' shape='circular' />
+        }
+      </Feed.Label>
       <Feed.Content>
         <Feed.Summary>
           <a href={userPath}>{name}</a> posted
         </Feed.Summary>
         <Feed.Extra text as={Link} to={show}>
-          {props.post.text}
+          {props.post.text.length > 100 ? props.post.text.slice(0, 99) + '...' : props.post.text}
         </Feed.Extra>
         <br/>
         <Feed.Meta>

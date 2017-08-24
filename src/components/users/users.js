@@ -17,7 +17,7 @@ export default class Users extends Component {
     .then(res => {
       let users = res.map(u => {
         return Object.assign({}, {
-          friendBool: !!this.props.currentUser.friends.find(f => f.id == u.id)
+          friendBool: this.friendOrNot(u)
         }, u)
       }).sort((a, b) => {
         if (a.first_name < b.first_name) return -1
@@ -26,6 +26,12 @@ export default class Users extends Component {
       })
       this.setState({ users, mounted: true }, this.toggleVisibility)
     })
+  }
+
+  friendOrNot(u) {
+    if (this.props.currentUser.friends) {
+      return !!this.props.currentUser.friends.find(f => f.id == u.id)
+    }
   }
 
   handleChange = (event) => {

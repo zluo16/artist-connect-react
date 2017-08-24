@@ -99,7 +99,7 @@ export default class HomeContainer extends Component {
     .then(res => {
       const posts = res.filter(post => {
         let firstTruth = post.user.id == this.props.currentUser.id
-        let secondTruth = this.props.friends.map(f => f.id)
+        let secondTruth = this.props.currentUser.friends.map(f => f.id)
             .includes(post.user.id)
         return firstTruth || secondTruth
       }).sort((p1, p2) => p2.id - p1.id)
@@ -198,7 +198,7 @@ export default class HomeContainer extends Component {
           handleChange={this.handleChange}
         />
 
-        <Route exact path="/home" render={() => {
+        <Route path="/home" render={() => {
         return( <Grid>
             <Grid.Column width={2}></Grid.Column>
             <Grid.Column width={12}>
@@ -209,7 +209,7 @@ export default class HomeContainer extends Component {
         }}
       />
 
-      <Route path="/home/posts/:id" render={() => {
+      <Route path="/posts/:id" render={() => {
       return( <Grid>
           <Grid.Column width={2}></Grid.Column>
           <Grid.Column width={12}>

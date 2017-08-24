@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Oleo+Script');
+
 .App {
   text-align: center;
 }
@@ -49,6 +51,17 @@
   overflow-y: auto;
 }
 
+.hold-post-show {
+  height: 575px !important;
+  overflow-y: auto;
+}
+
+.hold-posts {
+  height: 575px !important;
+  width: 200px !important;
+  overflow-y: auto;
+}
+
 .hold-users {
   height: 700px !important;
 }
@@ -61,9 +74,48 @@
   text-align: justify !important;
 }
 
+.login-header {
+  font-family: 'Oleo Script', cursive !important;
+  color: white !important;
+  font-size: 55px !important;
+}
+
+.login-background {
+  background: url('./background-imgs/piotr-chrobot-276746.jpg');
+  height: 100vh;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.under-header {
+  font-family: 'Oleo Script', cursive !important;
+  margin-top: -30px !important;
+  color: white !important;
+  font-size: 45px !important;
+}
+
+.under-under-header {
+  font-family: 'Oleo Script', cursive !important;
+  margin-top: -30px !important;
+  color: white !important;
+  font-size: 35px !important;
+}
+
+.login-form {
+  margin-top: 250px !important;
+}
+
+.left-margin {
+  margin-left: 7px !important;
+}
+
+.comment-text-left {
+  margin-left: 42px !important;
+}
+
 /* ##### FRONT PAGE CARD ##### */
 
-.slider{
+/*.slider{
   width: 100%;
   height: 100vh;
 
@@ -238,4 +290,4 @@
       }
     }
   }
-}
+}*/

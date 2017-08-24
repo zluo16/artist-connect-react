@@ -26,9 +26,9 @@ const FeedList = ({
   return (
     <div>
       <Grid padded divided>
-        <Grid.Column width={6}>
+        <Grid.Column width={6} className='hold-posts'>
           <Route path='/users/:id' render={() => (
-            <Feed>
+            <Feed className='hold-posts'>
               {postItems}
             </Feed>
           )} />
@@ -38,7 +38,7 @@ const FeedList = ({
             </Feed>
           )} />
         </Grid.Column>
-        <Grid.Column width={6}>
+        <Grid.Column width={10} className='hold-post-show'>
           <Route path='/home/posts/:id' render={() => (
             <PostShow
               post={post}
