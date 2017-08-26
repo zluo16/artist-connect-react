@@ -72,64 +72,6 @@ class App extends Component {
   componentDidMount() {
     AuthAdapter.currentUser()
     .then(currentUser => this.setState({ currentUser }))
-    // fetch('http://localhost:3000/api/v1/users', {
-    //   headers: {
-    //     'content-type': 'application/json',
-    //     'accept': 'application/json',
-    //     'Authorization': localStorage.getItem('jwt')
-    //   }
-    // })
-    // .then(res => res.json())
-    // .then(res => {
-    //   this.setState({ users: res })
-    // })
-
-    // fetch('http://localhost:3000/api/v1/job_postings', {
-    //   headers: {
-    //     'content-type': 'application/json',
-    //     'accept': 'application/json',
-    //     'Authorization': localStorage.getItem('jwt')
-    //   }
-    // })
-    // .then(res => res.json())
-    // .then(res => {
-    //   this.setState({ jobPostings: res })
-    // })
-
-    // fetch('http://localhost:3000/api/v1/organizations', {
-    //   headers: {
-    //     'content-type': 'application/json',
-    //     'accept': 'application/json',
-    //     'Authorization': localStorage.getItem('jwt')
-    //   }
-    // })
-    // .then(res => res.json())
-    // .then(res => {
-    //   this.setState({ organizations: res })
-    // })
-
-    // AuthAdapter.currentUser()
-    // .then(currentUser => {
-    //   this.setState({ currentUser, friends: currentUser.friends })
-    //   AuthAdapter.fetchPosts()
-    //   .then(res => {
-    //     const posts = res.filter(post => {
-    //       let firstTruth = post.user.id == currentUser.id
-    //       let secondTruth = this.state.friends.map(f => f.id)
-    //       .includes(post.user.id)
-    //       return firstTruth || secondTruth
-    //     }).reverse()
-    //     this.setState({ posts })
-    //     this.setState({
-    //       loading: false,
-    //       post: {
-    //         ...this.state.post,
-    //         user_id: currentUser.id
-    //       }
-    //     })
-    //   })
-    // })
-    //
   }
 
   handleChange = (event) => {
@@ -149,23 +91,12 @@ class App extends Component {
     this.setState({ users: filteredUsers, searchTerms: '' })
   }
 
-  // handleJobSearchSubmit = (event) => {
-  //   event.preventDefault()
-  //   let filteredJobs = this.state.jobPostings.filter(job => {
-  //     let searchTerms = this.state.searchTerms.toLowerCase()
-  //     let firstTruth = job.title.toLowerCase() === searchTerms
-  //
-  //     return firstTruth
-  //   })
-  // }
-
   render() {
     console.log("Rendering App")
     return (
       <div>
         {this.isLoggedIn() ?
           <div>
-            {/* <Switch><Redirect from='/' to='/home' /></Switch> */}
             <Menu secondary color={12} attached="top">
             <Menu.Item onClick={() => this.setState({ menuVisible: !this.state.menuVisible })} >
               <Icon name="sidebar"/>Menu

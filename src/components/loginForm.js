@@ -50,7 +50,7 @@ export default class Login extends Component {
         <Grid>
           <Grid.Column width={5}></Grid.Column>
           <Grid.Column width={6}>
-            <Header as='h1' className='login-form login-header'>Welcome to basic... </Header>
+            <Header as='h1' className='login-form login-header'>Welcome... </Header>
             <Header as='h2' className='under-header login-header'>Click anywhere!</Header>
             <Transition visible={mounted} animation='fade up' duration={1000}>
               <Header as='h3' className='under-under-header login-header'>Login... </Header>

@@ -217,6 +217,7 @@ export default class UserProfile extends Component {
           user={this.state.user}
           handleConnect={this.createConnection}
           checkFriends={this.state.checkFriends}
+          mounted={this.state.mounted}
         />
 
         <Route path='/users/:id' render={() => (
